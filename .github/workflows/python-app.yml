@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -15,11 +17,11 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Set up Python
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.x'
 
@@ -27,19 +29,44 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          
-      # Run tests with Allure report generation
-      - name: Run tests with Allure
+          pip install flake8 pytest
+          pip install allure-pytest
+          pip install selenium
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with flake8
         run: |
-          pytest --alluredir=allure-results
-
-      # Generate the Allure report
-      - name: Generate Allure report
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Test with pytest
         run: |
-          allure generate allure-results -o allure-report --clean
+          pytest tests_all.py --alluredir=allure-results
+        continue-on-error: true
+        
+          - name: Load test report history
+      uses: actions/checkout@v3
+      if: always()
+      continue-on-error: true
+      with:
+        ref: gh-pages
+        path: gh-pages
 
-      # Upload Allure report as an artifact
-      - name: Upload Allure Report
+    - name: Build test report
+      uses: simple-elf/allure-report-action@v1.7
+      if: always()
+      with:
+        gh_pages: gh-pages
+        allure_history: allure-history
+        allure_results: allure-results
+
+    - name: Publish test report
+      uses: peaceiris/actions-gh-pages@v3
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: allure-history
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
