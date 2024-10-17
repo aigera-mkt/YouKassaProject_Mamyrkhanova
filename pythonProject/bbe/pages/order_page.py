@@ -1,5 +1,5 @@
 import time
-
+from selenium.common import TimeoutException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -50,26 +50,25 @@ class OrderPage(BasePage):
     def input_wrong_location(self):
         location = self.location_locator()
         element_location = self.find_element(location)
-        element_location.clear()
         element_location.send_keys("г.Алматы")
      #Находим сообщение об ошибке по неверному вводу населенного пункта
     def error_alert(self):
-         error_alert_element = self.find_element((By.XPATH, "//*[@id='delivery-location-not-valid']"))
+         error_alert_element = self.find_element((By.XPATH, "//*[@id='delivery-location-not-valid']"),10)
          return error_alert_element.is_enabled()
     #Метод по выбору доставки курьером
     def delivery_by_curier(self):
-        delivery_element = self.find_element((By.XPATH, "//*[@id='delivery_variants']/div[2]/label[2]/span[1]/span"),10)
+        delivery_element = self.find_element((By.XPATH, "//*[@id='delivery_variants']/div[2]/label[2]/span[1]/span"),5)
         delivery_element.click()
 
     # Метод по заполнению ФИО
     def full_name(self):
-        full_name_element = self.find_element((By.XPATH, "//*[@id='client_name']"),10)
+        full_name_element = self.find_element((By.XPATH, "//*[@id='client_name']"),3)
         full_name_element.send_keys("Мамырханова Айгерим Талгатовна")
 
     # Метод для проверки выбора доставки курьером
     def is_delivery_by_curier_selected(self):
         try:
-            delivery_element = WebDriverWait(self.driver, 10).until(
+            delivery_element = WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located((By.XPATH, "//input[@id='order_delivery_variant_id_7870784']"))
             )
             return delivery_element.is_selected()  # Проверка, выбран ли элемент
@@ -80,7 +79,7 @@ class OrderPage(BasePage):
     # Метод для получения контактного номера
     def get_contact_number(self):
         try:
-            contact_number_element = WebDriverWait(self.driver, 10).until(
+            contact_number_element = WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located((By.ID, "client_phone"))
                 )
             return contact_number_element.get_attribute('value')  # Получение значения поля
@@ -91,7 +90,9 @@ class OrderPage(BasePage):
     # Клик по кнопке Подтвердить заказ
     def submit_button_click(self):
         submit_button = self.submit_button_locator()
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 3).until(
             EC.element_to_be_clickable(submit_button))
         submit_button_element = self.find_element(submit_button)
         submit_button_element.click()
+        time.sleep(5)
+

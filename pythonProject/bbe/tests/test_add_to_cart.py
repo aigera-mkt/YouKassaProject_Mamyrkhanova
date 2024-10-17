@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from bbe.pages.start_page import StartPage
 from bbe.pages.cart_page import CartPage
 from bbe.pages.order_page import OrderPage
+from bbe.pages.order_status_page import OrderStatusPage
 
 
 @pytest.mark.usefixtures("init_driver", "base_url","product_ids")
@@ -75,7 +76,7 @@ class TestNewOrder:
         # Инициализация страницы корзины и заказа
             cart_page = CartPage(self.driver)
             order_page = OrderPage(self.driver)
-
+            order_status_page = OrderStatusPage(self.driver)
             cart_page.open_cart_page()
 
             # Добавляем товар в корзину
@@ -85,7 +86,7 @@ class TestNewOrder:
             # Нажимаем кнопку "Оформить заказ"
             cart_page.order_button_click()
 
-            assert "order" in self.driver.current_url, "The order page did not open."
+            assert "new_order" in self.driver.current_url, "The order page did not open."
 
             # Открытие страницы заказа
             order_page.open_order_page()
@@ -104,6 +105,9 @@ class TestNewOrder:
             # Проверка наличия ошибки - алерт с текстом
             assert order_page.error_alert(), "Alert of location error is not displayed"
             time.sleep(3)
+
+            # Заполнить форму контактного телефона
+            order_page.input_contact_number()
             #Очищаем поле населенного пункта
             order_page.input_location_clear()
             # Заполняем форму населенного пункта
@@ -116,18 +120,16 @@ class TestNewOrder:
 
             # ФИО
             order_page.full_name()
+
             #Подтвердить заказ
             order_page.submit_button_click()
+            order_status_page.check_order_status()
 
-            # Проверка перехода на новый url
-            expected_url_part = "order"
-            current_url = self.driver.current_url  # Получаем текущий URL
-            print(f"Current URL: {current_url}")
-            assert expected_url_part in self.driver.current_url, f"The URL did not change as expected"
-            time.sleep(5)
-            # Проверка перехода на новый url с платежом
-            expected_url_part = "payments"
-            current_url = self.driver.current_url  # Получаем текущий URL
-            print(f"Current URL: {current_url}")
-            assert expected_url_part in self.driver.current_url, f"The URL did not change as expected"
+            time.sleep(10)
+
+        # Сохраняем текущий url
+            current_url_payments = self.driver.current_url
+
+            # Проверка перехода на новый URL
+            assert "payments" in current_url_payments, "The URL didn't contains 'payments'"
 
