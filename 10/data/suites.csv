@@ -1,0 +1,4 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Tue Oct 15 18:03:36 GMT 2024","Tue Oct 15 18:03:51 GMT 2024","15068","pythonProject.bbe.tests","test_add_to_cart","TestAddToCart","","","test_add_product_to_cart",""
+"passed","Tue Oct 15 18:04:30 GMT 2024","Tue Oct 15 18:05:26 GMT 2024","56629","pythonProject.bbe.tests","test_add_to_cart","TestNewOrder","","","test_input_order",""
+"passed","Tue Oct 15 18:03:55 GMT 2024","Tue Oct 15 18:04:25 GMT 2024","29588","pythonProject.bbe.tests","test_add_to_cart","TestCartOperations","","","test_cart_operations",""

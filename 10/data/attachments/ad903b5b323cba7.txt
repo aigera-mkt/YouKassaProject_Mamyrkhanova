@@ -1,0 +1,26 @@
+Error while checking order status: Message: Can't find element by locator ('xpath', "//h3/span[@class='green']")
+Stacktrace:
+	GetHandleVerifier [0x00007FF69202B095+29557]
+	(No symbol) [0x00007FF691F9FA50]
+	(No symbol) [0x00007FF691E5B56A]
+	(No symbol) [0x00007FF691EAF695]
+	(No symbol) [0x00007FF691EAF8EC]
+	(No symbol) [0x00007FF691EFB777]
+	(No symbol) [0x00007FF691ED71CF]
+	(No symbol) [0x00007FF691EF851C]
+	(No symbol) [0x00007FF691ED6F33]
+	(No symbol) [0x00007FF691EA116F]
+	(No symbol) [0x00007FF691EA22D1]
+	GetHandleVerifier [0x00007FF69235C96D+3378253]
+	GetHandleVerifier [0x00007FF6923A8497+3688311]
+	GetHandleVerifier [0x00007FF69239D1CB+3642539]
+	GetHandleVerifier [0x00007FF6920EA6B6+813462]
+	(No symbol) [0x00007FF691FAAB5F]
+	(No symbol) [0x00007FF691FA6B74]
+	(No symbol) [0x00007FF691FA6D10]
+	(No symbol) [0x00007FF691F95C1F]
+	BaseThreadInitThunk [0x00007FFCF153257D+29]
+	RtlUserThreadStart [0x00007FFCF346AF28+40]
+
+Timeout waiting for URL to change to include 'payments'
+Final URL after waiting: https://demo.yookassa.ru/new_order
